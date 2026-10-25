@@ -1,13 +1,29 @@
 
 import Cart from "./components/Cart";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Products from "./components/Products";
 import "./App.css";
 
 function App() {
-  const [cart, setCart] = useState([]);
+  
+const [cart, setCart] = useState(() => {
+  try {
+    const savedCart = localStorage.getItem("cropcart-cart");
+    const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+
+    return Array.isArray(parsedCart) ? parsedCart : [];
+  } catch {
+    return [];
+  }
+});
+
+useEffect(() => {
+  localStorage.setItem("cropcart-cart", JSON.stringify(cart));
+}, [cart]);
+
+
 
   function addToCart(product) {
     setCart((previousCart) => {
