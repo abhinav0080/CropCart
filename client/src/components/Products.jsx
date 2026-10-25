@@ -1,18 +1,41 @@
 
+import { useState, useEffect } from "react";
 import ProductCard from "./ProductCard";
 
 function Products({ addToCart }) {
-  const products = [
-    { id: 1, name: "Tomatoes", price: 40, image: "/tomato.jpg" },
-    { id: 2, name: "Potatoes", price: 30, image: "/potato.jpg" },
-    { id: 3, name: "Carrots", price: 50, image: "/carrot.jpg" },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch("/api/products");
+
+        if (!response.ok) {
+          throw new Error("Unable to load products");
+        }
+
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
 
   return (
-    <section className="products" id="products">
-      <h2>Fresh Products</h2>
+    <section id="products" className="products-section">
+      <h2>Fresh From Our Farmers</h2>
 
-      <div className="product-grid">
+      {loading && <p>Loading products...</p>}
+      {error && <p role="alert">{error}</p>}
+
+      <div className="products-grid">
         {products.map((product) => (
           <ProductCard
             key={product.id}
