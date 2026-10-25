@@ -1,4 +1,4 @@
-
+import Checkout from "./components/Checkout";
 import Cart from "./components/Cart";
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
@@ -54,6 +54,7 @@ useEffect(() => {
       <Hero />
       <Products addToCart={addToCart} />
       <Cart cart={cart} />
+      <Checkout cart={cart} />
     </div>
   );
 }
